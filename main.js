@@ -1,54 +1,76 @@
+function getRandomNumber() {
+  return Math.floor(Math.random() * 8);
+}
 
-/** Funcion crear tablero **/
+/** Buscar dos posiciones random para posicionarse **/
+function addBoat(board) {
+  let added = false;
+  while(!added){  
+    let x = getRandomNumber();
+    let y = getRandomNumber();
 
-function board(height, width){
-  let board = []; 
-    for (let i = 0; i < height; i++) {     
-          board.push([]);
-        for(let j = 0; j < width; j++){   
-            board[i].push('~');    
+    if(x + 1 < board.length && board[x][y] === '~' && board[x+1][y] === '~'){
+      board[x][y] = 'O';
+      board[x + 1][y] = 'O';
+      added = true;
+    }
+  }
+}
+
+function initBoard() {
+  const board = [];
+  for (let i = 0; i < 8; i++) {
+      board.push([]);
+      for (let j = 0; j < 8; j++) {
+          board[i].push('~');
+      }
+  }
+
+  for (let i = 0; i < 4; i++) {
+      addBoat(board);
+  }
+  console.table(board);
+  return board;
+}
+
+function playProof(){
+  let x = parseInt(prompt('X Coordenate'),10);
+  let y = parseInt(prompt('Y Coordenate'),10);
+
+  while(true){
+    const res = prompt('Dame un numero');
+    if(!isNaN(res) && parseInt(res,10) >= 0 && parseInt(res) < 8){
+      return parseInt(res);
     }  
   }
-    console.table(board);
-    return board; 
 }
-board(8,8);
 
+function play(board){
+    let numTurn = 0;
+    let numSeat = 0;
 
-/** Objeto que contien mis barcos  **/ 
-let ships = {
-    ship1:{
-      lenght: 2
-    },
-    ship2:{
-      lenght: 2
-    },
-    ship3:{
-      lenght: 2
-    },
-    ship4:{
-      lenght: 3
-    },
-    ship5:{
-      lenght: 3
-    },
-    ship6:{
-      lenght: 4
+    while(numTurn < 25 && numSeat < 8){
+    let playerX = playProof(); /** El 10 es la base decimal **/
+    let playerY = playProof();
+
+    if(board[playerX][playerY] === 'O'){
+      alert('Hit');
+      board[playerX][playerY] = 'X';
+      numSeat++;
+    }else{
+      alert('Miss');
     }
+    numTurn++;
+  }
+  if (numSeat === 8){
+    alert('You Win')
+  }else{
+    alert('You Lost')
+  }
 }
-console.table(ships);
 
-/** Random para buscar X - Y para poder posicionar mis barcos **/
-function shipPositioning(){
-
-  let hori = Math.floor(Math.random() * 8);
-  console.log(hori);
-  let vert = Math.floor(Math.random() * 8);
-  console.log(vert);
-  let shipPositioning = hori + vert;
-  console.log(shipPositioning);
-  return shipPositioning;
-}
-shipPositioning();
+const board = initBoard();
+play(board);
+playProof(board);
 
 
